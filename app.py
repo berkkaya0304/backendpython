@@ -27,9 +27,15 @@ def get_user(id):
 @app.route('/users', methods=['POST'])
 def create_user():
     user = request.json
-    id = str(max([int(k) for k in data.keys()], default=0) + 1)
-    data[id] = user
-    result = user.copy()
+    id = user.get("id")
+    if not id:
+        # Eğer id yoksa otomatik ata (safety)
+        id = str(max([int(k) for k in data.keys()], default=0) + 1)
+    data[id] = {
+        "name": user["name"],
+        "age": user["age"]
+    }
+    result = data[id].copy()
     result['id'] = id
     return jsonify(result), 201
 
