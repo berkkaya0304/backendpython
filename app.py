@@ -27,9 +27,11 @@ def get_user(id):
 @app.route('/users', methods=['POST'])
 def create_user():
     user = request.json
-    id = str(len(data) + 1)
+    id = str(max([int(k) for k in data.keys()], default=0) + 1)
     data[id] = user
-    return jsonify(data[id]), 201
+    result = user.copy()
+    result['id'] = id
+    return jsonify(result), 201
 
 # API endpoint to update a user
 @app.route('/users/<id>', methods=['PUT'])
